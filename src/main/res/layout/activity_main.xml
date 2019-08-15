@@ -20,5 +20,12 @@
             android:onClick="jikkouonclick"
             android:text="@string/jikkou"
     />
+    <ListView
+            android:id="@+id/list_view"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+
+    />
+
 
 </LinearLayout>

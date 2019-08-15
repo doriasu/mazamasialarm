@@ -10,22 +10,28 @@ import android.content.BroadcastReceiver
 import android.media.MediaPlayer
 import android.net.Uri
 import android.util.Log
-import android.widget.Toast
-import android.widget.LinearLayout
-import android.widget.Button
-import android.widget.TimePicker
+import android.widget.*
 import java.io.IOException
 import java.lang.IllegalArgumentException
 import java.text.SimpleDateFormat
 import java.util.*
 public var _player: MediaPlayer?=null
+public var adapter: ArrayAdapter<String>?=null
+public var count=0
 class MainActivity : AppCompatActivity() {
 
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        adapter=ArrayAdapter<String>(applicationContext,android.R.layout.simple_list_item_1)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        //ListViewオブジェクトをイジイジ
+        val listview=findViewById<ListView>(R.id.list_view)
+        listview.adapter=adapter
+
 
         //メディアプレーヤーフィールド
         _player= MediaPlayer()
@@ -60,7 +66,10 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+    //listviewのクリックに関する処理を記述
+    fun listclick(view :View){
 
+    }
     fun jikkouonclick(view : View){
         var calendar = jikokushutoku()
 
@@ -71,8 +80,13 @@ class MainActivity : AppCompatActivity() {
         //Intent作成
         val alarmIntent= Intent(this,AlarmReceiver::class.java)
 
+        var moji=calendar.get(Calendar.HOUR).toString()+"時"+calendar.get(Calendar.MINUTE).toString()+"分"
+        adapter?.add(moji)
+        //以下時間指定操作
 
-        val pendingintent=PendingIntent.getBroadcast(this,0,alarmIntent,PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val pendingintent=PendingIntent.getBroadcast(this,count,alarmIntent,PendingIntent.FLAG_UPDATE_CURRENT)
+        count++
 
         //alarmmanagerで指定時間後に処理を設定
         val manager=getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -118,9 +132,16 @@ class AlarmReceiver : BroadcastReceiver(){
     override fun onReceive(context: Context?, intent: Intent?) {
         Toast.makeText(context,"おきてー",Toast.LENGTH_LONG).show()
 
-        _player=MediaPlayer.create(context,R.raw.butterfly)
+
 
         _player?.let {
+            if(it.isPlaying){
+                it.stop()
+            }
+            //it.start()
+        }
+        _player=MediaPlayer.create(context,R.raw.butterfly)
+        _player?.let{
             it.start()
         }
         Log.i("LifeCycleSample","this is called")
