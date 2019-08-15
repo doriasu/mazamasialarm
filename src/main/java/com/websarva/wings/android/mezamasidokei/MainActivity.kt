@@ -1,5 +1,4 @@
 package com.websarva.wings.android.mezamasidokei
-
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,25 +7,62 @@ import android.app.PendingIntent
 import android.content.Context
 import android.app.AlarmManager
 import android.content.BroadcastReceiver
+import android.media.MediaPlayer
+import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import android.widget.LinearLayout
 import android.widget.Button
 import android.widget.TimePicker
+import java.io.IOException
+import java.lang.IllegalArgumentException
 import java.text.SimpleDateFormat
 import java.util.*
-
-
+public var _player: MediaPlayer?=null
 class MainActivity : AppCompatActivity() {
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        //メディアプレーヤーフィールド
+        _player= MediaPlayer()
+        //音声ファイルのURI文字列の生成
+        val mediaFileUriStr="android.resource://${packageName}/${R.raw.butterfly}"
+        val mediaFileUri= Uri.parse(mediaFileUriStr)
+        try{
+            //メディアプレーヤーに音声ファイルを設定
+            _player?.setDataSource(applicationContext,mediaFileUri)
+            //非同期でのメディア再生準備が完了したリスナを設定
+           // _player?.setOnPreparedListener(PlayerPreparedListener())
+            //メディア再生が終了したときのリスナの設定
+            //_player?.setOnCompletionListener(PlayerCompletionListener())
+            //非同期でメディア再生を準備
+            _player?.prepareAsync()
+        }
+        catch(ex: IllegalArgumentException){
+            Log.e("MediaSample","メディアプレーヤー準備時の例外発生",ex)
+        }
+        catch(ex: IOException){
+            Log.e("MediaSample","メディアプレーヤー準備時の例外発生",ex)
+
+        }
+
+
+    }
+    fun onSaisei(view:View){
+        _player?.let{
+            Log.i("LifeCycleSample","mediaplayer")
+            it.start()
+        }
+
+
     }
 
     fun jikkouonclick(view : View){
         var calendar = jikokushutoku()
-
 
         val alarmTime=calendar.timeInMillis
         //val alarmTime = System.currentTimeMillis() + 5000
@@ -34,6 +70,7 @@ class MainActivity : AppCompatActivity() {
         //Toast.makeText(this,"${alarmTime}",Toast.LENGTH_LONG).show()
         //Intent作成
         val alarmIntent= Intent(this,AlarmReceiver::class.java)
+
 
         val pendingintent=PendingIntent.getBroadcast(this,0,alarmIntent,PendingIntent.FLAG_UPDATE_CURRENT)
 
@@ -52,7 +89,17 @@ class MainActivity : AppCompatActivity() {
         val today=getToday()
         //calendarにのせる
         var calendar=Calendar.getInstance()
-        calendar.set(today.substring(0,4).toInt(),today.substring(4,6).toInt(),today.substring(6,8).toInt(),hour,minute)
+        //javaの月は0indexに注意
+        calendar.set(today.substring(0,4).toInt(),today.substring(5,6).toInt()-1,today.substring(6,8).toInt(),hour,minute,0)
+
+        //log
+        Log.i("LifeCycleSample",today.substring(0,4))
+        Log.i("LifeCycleSample",(today.substring(4,6).toInt()-1).toString())
+        Log.i("LifeCycleSample",today.substring(6,8))
+        Log.i("LifeCycleSample",hour.toString())
+        Log.i("LifeCycleSample",minute.toString())
+
+
         return calendar
 
 
@@ -69,9 +116,16 @@ class MainActivity : AppCompatActivity() {
 }
 class AlarmReceiver : BroadcastReceiver(){
     override fun onReceive(context: Context?, intent: Intent?) {
-        Toast.makeText(context,"処理の実行",Toast.LENGTH_LONG).show()
+        Toast.makeText(context,"おきてー",Toast.LENGTH_LONG).show()
+
+        _player=MediaPlayer.create(context,R.raw.butterfly)
+
+        _player?.let {
+            it.start()
+        }
         Log.i("LifeCycleSample","this is called")
 
     }
+
 }
 
