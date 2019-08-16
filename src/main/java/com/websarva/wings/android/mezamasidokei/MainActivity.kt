@@ -27,9 +27,6 @@ public var gohuncount=1
 
 class MainActivity : AppCompatActivity() {
 
-
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         adapter=ArrayAdapter<String>(applicationContext,android.R.layout.simple_list_item_1)
         super.onCreate(savedInstanceState)
@@ -151,9 +148,6 @@ class MainActivity : AppCompatActivity() {
 
         return calendar
 
-
-
-
     }
 
 
@@ -171,9 +165,6 @@ class MainActivity : AppCompatActivity() {
 
 
         return calendar
-
-
-
 
     }
 
@@ -195,13 +186,6 @@ class MainActivity : AppCompatActivity() {
             val manager=getSystemService(Context.ALARM_SERVICE) as AlarmManager
             manager.cancel(pendingintent)
             adapter?.remove(adapter?.getItem(position))
-
-
-
-
-
-
-
 
 
 
