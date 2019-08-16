@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">めざまし時計</string>
     <string name="jikkou">追加</string>
+    <string name="gohun">5分追加</string>
+    <string name="sakujokakunin">削除確認</string>
+    <string name="sakujo_msg">このアラームを削除しますか?</string>
+    <string name="sakujo">削除</string>
+    <string name="kyanseru">キャンセル</string>
 </resources>

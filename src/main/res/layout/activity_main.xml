@@ -20,6 +20,12 @@
             android:onClick="jikkouonclick"
             android:text="@string/jikkou"
     />
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="gohunonclick"
+            android:text="@string/gohun"
+    />
     <ListView
             android:id="@+id/list_view"
             android:layout_width="fill_parent"
